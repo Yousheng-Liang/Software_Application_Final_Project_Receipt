@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private String receipt_year;
     private String receipt_date;
     private String receipt_number;
+    private String[] receipt_interval = {"", "1~2月", "1~2月", "3~4月", "3~4月", "5~6月", "5~6月", "7~8月", "7~8月", "9~10月", "9~10月", "11~12月", "11~12月"};
 
     @Override
     protected void onDestroy() {
@@ -87,9 +88,10 @@ public class MainActivity extends AppCompatActivity {
 
                     String[] date = receipt_date.split("/");
 
+
                     // 把發票資料寫入資料庫
-                    db.execSQL("INSERT INTO " + DB_NAME + "(Receipt_Year, Receipt_Month, Receipt_Day, Receipt_Number) VALUES(?,?,?,?)",
-                            new String[]{receipt_year, date[0], date[1], receipt_number});
+                    db.execSQL("INSERT INTO " + DB_NAME + "(Receipt_Year, Receipt_Month, Receipt_Day, Receipt_Number, Receipt_Interval) VALUES(?,?,?,?,?)",
+                            new String[]{receipt_year, date[0], date[1], receipt_number, receipt_year+"年"+receipt_interval[Integer.parseInt(date[0])]});
                     Toast.makeText(getApplication(), "發票資料已寫入", Toast.LENGTH_SHORT).show();
 
                 }catch (Exception e){
@@ -110,13 +112,20 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplication(), "共有" + c.getCount()+"筆資料", Toast.LENGTH_SHORT).show();
                 // 逐筆資料讀取並放入arrayList中
                 for(int i=0; i<c.getCount(); i++){
-                    list.add("發票年度：" + c.getString(0) + "\t\t\t發票日期：" + c.getString(1) + "月" + c.getString(2) + "日" + "\n發票號碼：" + c.getString(3));
+                    list.add("發票年度：" + c.getString(0) + "\t\t\t發票日期：" + c.getString(1) + "月" + c.getString(2) + "日" + "\n發票號碼：" + c.getString(3) + "\n開獎區間：" + c.getString(4));
                     c.moveToNext();
                 }
                 // 告知adapter內容更新
                 adapter.notifyDataSetChanged();
                 // 關閉Cursor
                 c.close();
+
+                Cursor c2 = db.rawQuery("SELECT Count(Distinct Receipt_Interval) FROM " + DB_NAME + " order by Receipt_Interval", null);
+                c2.moveToFirst();
+                for(int i=0; i<c2.getCount(); i++){
+                    Toast.makeText(getApplication(), c2.getString(0), Toast.LENGTH_SHORT).show();
+                    c2.moveToNext();
+                }
             }
         });
 

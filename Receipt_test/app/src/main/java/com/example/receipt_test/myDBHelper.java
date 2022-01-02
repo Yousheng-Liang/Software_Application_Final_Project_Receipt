@@ -22,7 +22,8 @@ public class myDBHelper extends SQLiteOpenHelper {
                 "Receipt_Year integer NOT NULL, " +
                 "Receipt_Month text NOT NULL, " +
                 "Receipt_Day text NOT NULL, " +
-                "Receipt_Number text NOT NULL PRIMARY KEY)"
+                "Receipt_Number text NOT NULL PRIMARY KEY," +
+                "Receipt_Interval text NOT NULL)"
                 );
     }
 

@@ -2,9 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.software_application_final_project">
     <!-- 要求相機權限，以掃描QR Code -->
-    <uses-permission android:name="android.permission.CAMERA" /> <!-- 要求儲存權限，以儲存發票資訊 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 要求網路權限，以獲取發票對獎號碼 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- 要求網路權限，以獲取發票對獎號碼 -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application

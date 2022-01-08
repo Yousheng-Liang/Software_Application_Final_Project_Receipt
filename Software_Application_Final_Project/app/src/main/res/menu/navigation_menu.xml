@@ -11,5 +11,10 @@
         android:icon="@drawable/ic_qr_code_scanner_24"
         android:title="掃描QRCode" />
 
+    <item
+        android:id="@+id/navigation_manual_input"
+        android:icon="@drawable/ic_manual_input_receipt_24"
+        android:title="手動輸入" />
+
 
 </menu>

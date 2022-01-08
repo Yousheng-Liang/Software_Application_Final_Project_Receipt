@@ -14,7 +14,7 @@
         android:textAlignment="center"
         android:textColor="#444444"
         android:textSize="18dp"
-        android:text="若沒有相機權限，本程式無法順利運行\n請按下取得相機權限按鈕並選擇允許權限" />
+        android:text="若沒有相機權限，本程式無法順利運行\n請按下取得相機權限按鈕並選擇允許權限\n或至應用程式資訊頁面允許本程式存取相機" />
 
     <Button
         android:id="@+id/btnRequestCameraPermission"

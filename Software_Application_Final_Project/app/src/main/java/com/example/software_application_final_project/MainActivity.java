@@ -72,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.navigation_scan:
                         selected_Fragement = new Scan_QRCode_Fragment();
                         break;
+                    case R.id.navigation_manual_input:
+                        selected_Fragement = new Receipt_Manual_Input_Fragment();
+                        break;
                 }
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.myFragmentContainer, selected_Fragement).commit();

@@ -1,12 +1,9 @@
 package com.example.software_application_final_project;
 
-import android.content.ClipboardManager;
-import android.content.Context;
-import android.content.SharedPreferences;
+
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,27 +11,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
-
 
 public class Receipt_Record_Fragment extends Fragment {
 
@@ -111,7 +92,7 @@ public class Receipt_Record_Fragment extends Fragment {
 
     private void loadDataFromDB() {
         db = new myDBHelper(getActivity()).getWritableDatabase();
-        Cursor c = db.rawQuery("SELECT DISTINCT Receipt_Interval FROM " + DB_NAME + " ORDER BY Receipt_Interval, Receipt_Month", null);
+        Cursor c = db.rawQuery("SELECT DISTINCT Receipt_Interval FROM " + DB_NAME + " ORDER BY Receipt_Year, CAST(strftime('%m', Receipt_Month) AS INTEGER)", null);
         c.moveToFirst();
 
         // 將目前儲存的發票兌獎區間儲存為array並塞給spinner
@@ -119,9 +100,10 @@ public class Receipt_Record_Fragment extends Fragment {
             selector_list.add(c.getString(0));
             c.moveToNext();
         }
-        Collections.sort(selector_list);
         selector_adapter.notifyDataSetChanged();
         interval_selector.setAdapter(selector_adapter);
+        // 將預設選取的項目設定為最後一個(最新)
+        interval_selector.setSelection(selector_list.size()-1);
     }
 
     private void findViewByIds(){

@@ -10,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,9 +23,10 @@ public class Receipt_Record_Fragment extends Fragment {
 
     // 物件及介面相關變數
     View view;
-    Button btnClear;
     Spinner interval_selector;
     private RecyclerView recyclerView;
+    private LinearLayout lay1;
+    private TextView receipt_amount, money_amount;
     myAdapter adapter;
 
     // 資料庫相關變數
@@ -50,35 +53,16 @@ public class Receipt_Record_Fragment extends Fragment {
             Toast.makeText(getActivity(), "載入發票時發生了問題", Toast.LENGTH_SHORT).show();
         }
 
-
-        btnClear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                try{
-                    db.execSQL("DELETE FROM " + DB_NAME);
-                    Cursor c = db.rawQuery("SELECT * FROM " + DB_NAME, null);
-                    receipt_list.clear();
-                    adapter = new myAdapter(c);
-                    recyclerView.setAdapter(adapter);
-                    selector_list.clear();
-                    selector_adapter.notifyDataSetChanged();
-                    Toast.makeText(getActivity(), "所有發票資料皆已清除完畢", Toast.LENGTH_SHORT).show();
-                }catch (Exception e){
-                    Toast.makeText(getActivity(), "清除資料時發生了錯誤", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
-
         interval_selector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // 將選擇到的區間之所有發票表列出來
-                Cursor c = db.rawQuery("SELECT * FROM " + DB_NAME + " WHERE Receipt_Interval = '" + parent.getSelectedItem().toString() + "' ORDER BY Receipt_Month, Receipt_Day", null);
+                Cursor c = db.rawQuery("SELECT * FROM " + DB_NAME + " WHERE Receipt_Interval = '" + parent.getSelectedItem().toString() + "' ORDER BY Receipt_Month, Cast(strftime('%d', Receipt_Day) as Integer)", null);
                 c.moveToFirst();
                 adapter = new myAdapter(c);
                 recyclerView.setAdapter(adapter);
+                receipt_amount.setText("發票張數\n" + c.getCount());
+                lay1.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -107,9 +91,11 @@ public class Receipt_Record_Fragment extends Fragment {
     }
 
     private void findViewByIds(){
-        btnClear = view.findViewById(R.id.btnClear);
         recyclerView = view.findViewById(R.id.myRecyclerView);
         interval_selector = view.findViewById(R.id.interval_selector);
+        lay1 = view.findViewById(R.id.lay1);
+        receipt_amount = view.findViewById(R.id.receipt_amount);
+        money_amount = view.findViewById(R.id.money_amount);
     }
 
     private void myInit(){
@@ -122,6 +108,6 @@ public class Receipt_Record_Fragment extends Fragment {
         db = new myDBHelper(getActivity()).getWritableDatabase();
         // 初始化Spinner相關變數
         selector_list = new ArrayList<>();
-        selector_adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, selector_list);
+        selector_adapter = new ArrayAdapter(getActivity(), R.layout.spinner_items_layout, selector_list);
     }
 }

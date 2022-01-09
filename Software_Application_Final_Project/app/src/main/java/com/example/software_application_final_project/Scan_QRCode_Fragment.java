@@ -47,7 +47,7 @@ public class Scan_QRCode_Fragment extends Fragment {
     private SQLiteDatabase db;
     private ArrayList<String> list;
     private final String DB_NAME = "MY_RECEIPT";
-    private String[] receipt_interval = {"", "1~2月", "1~2月", "3~4月", "3~4月", "5~6月", "5~6月", "7~8月", "7~8月", "9~10月", "9~10月", "11~12月", "11~12月"};
+    private String[] receipt_interval = {"", "01~02月", "01~02月", "03~04月", "03~04月", "05~06月", "05~06月", "07~08月", "07~08月", "09~10月", "09~10月", "11~12月", "11~12月"};
 
     // 宣告Google相機所需變數
     CameraSource cameraSource;

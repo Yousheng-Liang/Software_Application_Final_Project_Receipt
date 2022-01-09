@@ -19,6 +19,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.chrono.MinguoDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -42,7 +45,7 @@ public class Receipt_Manual_Input_Fragment extends Fragment {
     private String receipt_year;
     private String receipt_date;
     private String receipt_number;
-    private String[] receipt_interval = {"", "1~2月", "1~2月", "3~4月", "3~4月", "5~6月", "5~6月", "7~8月", "7~8月", "9~10月", "9~10月", "11~12月", "11~12月"};
+    private String[] receipt_interval = {"", "01~02月", "01~02月", "03~04月", "03~04月", "05~06月", "05~06月", "07~08月", "07~08月", "09~10月", "09~10月", "11~12月", "11~12月"};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,8 +98,10 @@ public class Receipt_Manual_Input_Fragment extends Fragment {
                     Calendar calendar = Calendar.getInstance();
                     calendar.set(year, month, dayOfMonth);
                     String date_format = "yyyy/M/d";
+                    // 西元年轉民國年
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(date_format, Locale.TAIWAN);
-                    boxDate.setText(simpleDateFormat.format(calendar.getTime()));
+                    LocalDate localDate = LocalDate.parse(simpleDateFormat.format(calendar.getTime()), DateTimeFormatter.ofPattern("yyyy/M/d"));
+                    boxDate.setText(MinguoDate.from(localDate).format(DateTimeFormatter.ofPattern("yyy/MM/dd")));
                 }
             }
         };

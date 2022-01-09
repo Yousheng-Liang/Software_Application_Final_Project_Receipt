@@ -1,5 +1,6 @@
 package com.example.software_application_final_project;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
@@ -7,15 +8,25 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 public class Redeem_Task extends AsyncTask<String, Void, Integer> {
 
@@ -24,6 +35,7 @@ public class Redeem_Task extends AsyncTask<String, Void, Integer> {
     private SQLiteDatabase db;
     private int str_money_amount;
     private Context context;
+    TreeMap<String, Integer> redeem_receipts; // 用以儲存中獎的發票
 
 
     public Redeem_Task(Context context, String interval){
@@ -37,7 +49,19 @@ public class Redeem_Task extends AsyncTask<String, Void, Integer> {
     protected void onPostExecute(Integer integer) {
         super.onPostExecute(integer);
         TextView money_amount = (TextView) ((Activity) context).findViewById(R.id.money_amount);
-        money_amount.setText("中獎金額\n" + str_money_amount);
+        Spinner selected_interval = (Spinner) ((Activity) context).findViewById(R.id.interval_selector);
+        RecyclerView recyclerView = (RecyclerView) ((Activity) context).findViewById(R.id.myRecyclerView);
+        myAdapter adapter;
+        if(str_money_amount != -1){
+            money_amount.setText("中獎金額\n" + str_money_amount);
+            // 將選擇到的區間之所有發票表列出來
+            Cursor c = db.rawQuery("SELECT * FROM " + DB_NAME + " WHERE Receipt_Interval = '" + selected_interval.getSelectedItem().toString() + "' ORDER BY Receipt_Month, Cast(strftime('%d', Receipt_Day) as Integer)", null);
+            c.moveToFirst();
+            adapter = new myAdapter(c, redeem_receipts);
+            recyclerView.setAdapter(adapter);
+        }
+        else
+            money_amount.setText("網路出錯\n請重新嘗試");
     }
 
     @Override
@@ -47,7 +71,7 @@ public class Redeem_Task extends AsyncTask<String, Void, Integer> {
         String target_interval = interval; // 獲取目前發票之時段
         String split_interval[] = target_interval.split("~"); // 提取年分及奇數月份
         String processed_interval[] = split_interval[0].split("年"); // 分開年分及奇數月份
-        String year = Integer.toString(Integer.parseInt(processed_interval[0]) - 1911); // 西元年轉為民國年
+        String year = processed_interval[0]; // 西元年轉為民國年
         String month = processed_interval[1].length() == 1 ? "0" + processed_interval[1] : processed_interval[1]; // 月份補0
         String target_url = "https://www.etax.nat.gov.tw/etw-main/ETW183W2_" + year + month + "/"; // 財政部提供之開獎網站
 
@@ -60,6 +84,7 @@ public class Redeem_Task extends AsyncTask<String, Void, Integer> {
 
         } catch (IOException e) {
             e.printStackTrace();
+            str_money_amount = -1;
         }
 
         return str_money_amount;
@@ -68,6 +93,7 @@ public class Redeem_Task extends AsyncTask<String, Void, Integer> {
     private int Redeem(String[] redeem_num) {
         //獎金
         int money = 0;
+        redeem_receipts = new TreeMap<>(); // 初始化map
 
         //頭獎金額
         Map<Integer, Integer> jackpotMap = new HashMap<>();
@@ -86,12 +112,14 @@ public class Redeem_Task extends AsyncTask<String, Void, Integer> {
             if (i != 0) c.moveToNext();
             //當前號碼
             String receipt = c.getString(0).substring(3);
+            Log.d("LYS", receipt);
 
             //特別獎中獎號碼
             String pstr = redeem_num[0];
 
             if (receipt.equals(pstr)) {
                 money += 10000000;
+                redeem_receipts.put(receipt, 10000000);
                 continue;
             }
 
@@ -99,6 +127,7 @@ public class Redeem_Task extends AsyncTask<String, Void, Integer> {
             pstr = redeem_num[1];
             if (receipt.equals(pstr)) {
                 money += 2000000;
+                redeem_receipts.put(receipt, 2000000);
                 continue;
             }
 
@@ -106,6 +135,7 @@ public class Redeem_Task extends AsyncTask<String, Void, Integer> {
             pstr = redeem_num[5];
             if (receipt.substring(5).equals(pstr)) {
                 money += 200;
+                redeem_receipts.put(receipt, 200);
                 continue;
             }
 
@@ -126,6 +156,7 @@ public class Redeem_Task extends AsyncTask<String, Void, Integer> {
                 //頭獎
                 if (jackpotMap.containsKey(samebits)) {
                     money += jackpotMap.get(samebits);
+                    redeem_receipts.put(receipt, jackpotMap.get(samebits));
                     continue;
                 }
             }

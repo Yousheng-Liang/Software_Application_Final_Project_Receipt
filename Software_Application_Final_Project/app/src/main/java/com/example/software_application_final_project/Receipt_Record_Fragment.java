@@ -30,6 +30,9 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -104,7 +107,7 @@ public class Receipt_Record_Fragment extends Fragment {
         money_amount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(money_amount.getText().toString() == "點此兌獎")
+                if (money_amount.getText().toString() == "點此兌獎")
                     new Redeem_Task(getActivity(), interval_selector.getSelectedItem().toString()).execute();
             }
         });
@@ -126,25 +129,19 @@ public class Receipt_Record_Fragment extends Fragment {
 
 
         // 判斷是否開獎(開獎時間：每單月25日下午1:30~1:50，為求保險，判斷時段為下午2:00)
-        try {
-            // 取得目前時間
-            Date current_date = format.parse(format.format(calendar.getTime()));
-            // 開獎時間
-            Calendar draw_calendar = Calendar.getInstance();
-            draw_calendar.set(Integer.parseInt(processed_interval[0]), Integer.parseInt(processed_interval[1]), 25);
-            draw_calendar.add(Calendar.MONTH, 1); // 開獎時間為奇數月後的下兩個月
-            Date draw_date = draw_calendar.getTime();
 
-            Long DayDiff = draw_date.getTime() - current_date.getTime();
-            Integer daydiff = (int) (DayDiff / (24*60*60*1000));
+        // 取得目前時間
+        LocalDateTime current_date = LocalDateTime.now();
 
-            if (current_date.before(draw_date)) {
-                money_amount.setText("開獎倒數\n" + daydiff + "天");
-                return;
-            }
+        // 開獎時間
+        LocalDateTime draw_date = LocalDateTime.parse((Integer.parseInt(processed_interval[0]) + 1911) + "-" + processed_interval[1] + "-25T14:00:00");
+        draw_date = draw_date.plusMonths(2); // 設定開獎月份
 
-        } catch (ParseException e) {
-            e.printStackTrace();
+        Duration day_diff = Duration.between(current_date, draw_date);
+
+        if (draw_date.isAfter(current_date)) {
+            money_amount.setText("開獎倒數\n" + (day_diff.toDays() + 1) + "天");
+            return;
         }
         money_amount.setText("點此兌獎");
     }

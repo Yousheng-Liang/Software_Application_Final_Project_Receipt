@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Receipt_Record_Fragment">
+
+    <Spinner
+        android:id="@+id/interval_selector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#E0F2F1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textAlignment="center"
+        android:gravity="center"/>
+
+    <LinearLayout
+        android:id="@+id/lay1"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/interval_selector" >
+
+        <TextView
+            android:id="@+id/receipt_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:lineHeight="30dp"
+            android:textSize="20dp"
+            android:textAlignment="center"
+            android:text="發票張數\n136"/>
+
+        <View
+            android:layout_gravity="center"
+            android:layout_width="1dp"
+            android:layout_height="40dp"
+            android:background="#CCC"/>
+
+        <TextView
+            android:id="@+id/money_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:lineHeight="30dp"
+            android:textSize="20dp"
+            android:textAlignment="center"
+            android:text="中獎金額\n0"/>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/myRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="140dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lay1" />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_receipt"
+        android:icon="@drawable/ic_receipt_24"
+        android:title="我的發票" />
+
+    <item
+        android:id="@+id/navigation_scan"
+        android:icon="@drawable/ic_qr_code_scanner_24"
+        android:title="掃描QRCode" />
+
+    <item
+        android:id="@+id/navigation_manual_input"
+        android:icon="@drawable/ic_manual_input_receipt_24"
+        android:title="手動輸入" />
+
+
+</menu>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".Scan_QRCode_Fragment">
+
+    <SurfaceView
+        android:id="@+id/surfaceView"
+        android:layout_width="350dp"
+        android:layout_height="525dp" />
+
+    <TextView
+        android:id="@+id/tvRead"
+        android:textSize="20dp"
+        android:text="Blank"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

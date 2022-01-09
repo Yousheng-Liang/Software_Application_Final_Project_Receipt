@@ -42,5 +42,7 @@ dependencies {
     implementation 'com.github.clans:fab:1.6.4' // 大神開發的FloatActionMenu
     implementation 'com.google.android.material:material:1.3.0-alpha04' // Google的Material Design
     implementation 'com.google.code.gson:gson:2.8.9' // Google提供的Json函式庫
+    implementation 'com.squareup.okhttp3:okhttp:4.2.2' // okhttp
+    implementation 'org.jsoup:jsoup:1.14.3' // jsoup
 
 }

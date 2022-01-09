@@ -82,12 +82,22 @@ public class Receipt_Manual_Input_Fragment extends Fragment {
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                // 初始化Calendar
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(year, month, dayOfMonth);
-                String date_format = "yyyy/M/d";
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(date_format, Locale.TAIWAN);
-                boxDate.setText(simpleDateFormat.format(calendar.getTime()));
+
+                // 判斷使用者是不是穿越時空，輸入了未來的發票
+                Calendar set_calendar = Calendar.getInstance();
+                set_calendar.set(year, month, dayOfMonth);
+
+                Calendar today_calendat = Calendar.getInstance();
+                if(today_calendat.before(set_calendar)){
+                    Toast.makeText(getActivity(), "請勿加入未來發票，買彩券比較好賺", Toast.LENGTH_SHORT).show();
+                }else{
+                    // 初始化Calendar
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(year, month, dayOfMonth);
+                    String date_format = "yyyy/M/d";
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(date_format, Locale.TAIWAN);
+                    boxDate.setText(simpleDateFormat.format(calendar.getTime()));
+                }
             }
         };
 

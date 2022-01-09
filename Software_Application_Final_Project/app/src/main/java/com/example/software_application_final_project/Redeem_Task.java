@@ -37,7 +37,10 @@ public class Redeem_Task extends AsyncTask<String, Void, Integer> {
     protected void onPostExecute(Integer integer) {
         super.onPostExecute(integer);
         TextView money_amount = (TextView) ((Activity) context).findViewById(R.id.money_amount);
-        money_amount.setText("中獎金額\n" + str_money_amount);
+        if(str_money_amount != -1)
+            money_amount.setText("中獎金額\n" + str_money_amount);
+        else
+            money_amount.setText("網路出錯\n請重新嘗試");
     }
 
     @Override
@@ -47,7 +50,7 @@ public class Redeem_Task extends AsyncTask<String, Void, Integer> {
         String target_interval = interval; // 獲取目前發票之時段
         String split_interval[] = target_interval.split("~"); // 提取年分及奇數月份
         String processed_interval[] = split_interval[0].split("年"); // 分開年分及奇數月份
-        String year = Integer.toString(Integer.parseInt(processed_interval[0]) - 1911); // 西元年轉為民國年
+        String year = processed_interval[0]; // 西元年轉為民國年
         String month = processed_interval[1].length() == 1 ? "0" + processed_interval[1] : processed_interval[1]; // 月份補0
         String target_url = "https://www.etax.nat.gov.tw/etw-main/ETW183W2_" + year + month + "/"; // 財政部提供之開獎網站
 
@@ -60,6 +63,7 @@ public class Redeem_Task extends AsyncTask<String, Void, Integer> {
 
         } catch (IOException e) {
             e.printStackTrace();
+            str_money_amount = -1;
         }
 
         return str_money_amount;

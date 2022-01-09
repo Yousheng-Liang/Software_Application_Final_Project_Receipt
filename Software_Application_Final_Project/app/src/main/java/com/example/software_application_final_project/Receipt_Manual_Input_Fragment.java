@@ -19,6 +19,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.chrono.MinguoDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -95,8 +98,10 @@ public class Receipt_Manual_Input_Fragment extends Fragment {
                     Calendar calendar = Calendar.getInstance();
                     calendar.set(year, month, dayOfMonth);
                     String date_format = "yyyy/M/d";
+                    // 西元年轉民國年
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(date_format, Locale.TAIWAN);
-                    boxDate.setText(simpleDateFormat.format(calendar.getTime()));
+                    LocalDate localDate = LocalDate.parse(simpleDateFormat.format(calendar.getTime()), DateTimeFormatter.ofPattern("yyyy/M/d"));
+                    boxDate.setText(MinguoDate.from(localDate).format(DateTimeFormatter.ofPattern("yyy/M/d")));
                 }
             }
         };
